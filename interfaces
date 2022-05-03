@@ -1,0 +1,17 @@
+#lorem 
+#lorem 
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto enp0s3
+iface enp0s3 inet dhcp
+auto enp0s8
+iface enp0s3 inet static
+	address 10.0.33.1
+	netmask 255.255.255.0
+	network 10.0.33.0
+	broadcast 10.0.33.255

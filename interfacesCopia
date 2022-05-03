@@ -1,0 +1,12 @@
+#lorem 
+#lorem 
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# the primary network interface
+allow-hotplug enp0s3
+iface enp0s3 inet dhcp
