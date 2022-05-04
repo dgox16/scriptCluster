@@ -80,7 +80,7 @@ a_file.close()
 
 # Cosas por sabe
 
-os.system("chroot /srv/nfs")
+os.system("chroot /srv/nfs/node1")
 os.system("mount -t proc proc proc")
 os.system("apt update -y && apt install -y initramfs-tools linux-image-amd64 ")
 os.system("echo BOOT=nfs >> /etc/initramfs-tools/initramfs.conf")
