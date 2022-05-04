@@ -55,10 +55,10 @@ os.system("mkdir /srv/tftp/pxelinux.cfg")
 os.system("touch /srv/tftp/pxelinux.cfg/"+ mac1Dir)
 os.system("touch /srv/tftp/pxelinux.cfg/"+ mac2Dir)
 
-a_file = open("/srv/tftp/pxelinux.cfg/"+mac1Dir)
+a_file = open("/srv/tftp/pxelinux.cfg/"+mac1Dir, "w")
 a_file.write("default node1\nprompt 1\ntimeout 3\n\tlabel node1\n\tkernel vmlinuz.pxe\n\tappend rw initrd=initrd.pxe root=/dev/nfs ip=dhcp nfsroot=10.0.33.1:/srv/nfs/node1/")
 a_file.close()
-a_file = open("/srv/tftp/pxelinux.cfg/"+mac2Dir)
+a_file = open("/srv/tftp/pxelinux.cfg/"+mac2Dir, "w")
 a_file.write("default node2\nprompt 1\ntimeout 3\n\tlabel node2\n\tkernel vmlinuz.pxe\n\tappend rw initrd=initrd.pxe root=/dev/nfs ip=dhcp nfsroot=10.0.33.1:/srv/nfs/node2/")
 a_file.close()
 
@@ -66,4 +66,25 @@ os.system("systemctl restart tftpd-hpa")
 os.system("systemctl restart nfs-kernel-server")
 
 os.system("mkdir /srv/nfs/node1")
+os.system("debootstrap --arch amd64 bullseye /srv/nfs/node1 https://deb.debian.org/debian")
 
+a_file = open("/srv/nfs/node1/etc/fstab", "w")
+a_file.truncate(0)
+a_file.write("/dev/nfs / nfs tcp,nolock 0 0\nproc /proc proc defaults 0 0\nnone /tmp tmpfs defaults 0 0\nnone /var/tmp tmpfs defaults 0 0\nnone /media tmpfs defaults 0 0\nnone /var/log tmpfs defaults 0 0")
+a_file.close()
+
+a_file = open("/srv/nfs/node1/etc/network/interfaces", "w")
+a_file.truncate(0)
+a_file.write("source /etc/network/interfaces.d/*\niface enp0s3 inet dhcp")
+a_file.close()
+
+# Cosas por sabe
+
+os.system("chroot /srv/nfs")
+os.system("mount -t proc proc proc")
+os.system("apt update -y && apt install -y initramfs-tools linux-image-amd64 ")
+os.system("echo BOOT=nfs >> /etc/initramfs-tools/initramfs.conf")
+os.system("mkinitramfs -d /etc/initramfs-tools/initramfs.conf -o /boot/initrd.pxe")
+os.system("update-initramfs -u")
+# os.system("cp -vax /boot/initrd.img* /boot/initrd.pxe")
+# os.system("cp -vax /boot/vmlinuz* /boot/vmlinuz.pxe")
