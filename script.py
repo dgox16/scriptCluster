@@ -78,13 +78,23 @@ a_file.truncate(0)
 a_file.write("source /etc/network/interfaces.d/*\niface enp0s3 inet dhcp")
 a_file.close()
 
-# Cosas por sabe
-
+os.system("cp -a /home/scriptCluster/ /srv/nfs/node1/home/")
 os.system("chroot /srv/nfs/node1")
-os.system("mount -t proc proc proc")
-os.system("apt update -y && apt install -y initramfs-tools linux-image-amd64 ")
-os.system("echo BOOT=nfs >> /etc/initramfs-tools/initramfs.conf")
-os.system("mkinitramfs -d /etc/initramfs-tools/initramfs.conf -o /boot/initrd.pxe")
-os.system("update-initramfs -u")
-# os.system("cp -vax /boot/initrd.img* /boot/initrd.pxe")
-# os.system("cp -vax /boot/vmlinuz* /boot/vmlinuz.pxe")
+
+os.system("cp -vax /srv/nfs/node1/boot/*.pxe /srv/tftp")
+os.system("cp -a /srv/nfs/node1/ /srv/nfs/node2")
+
+a_file = open("/srv/nfs/node1/etc/hostname", "w")
+a_file.truncate(0)
+a_file.write("node1")
+a_file.close()
+a_file = open("/srv/nfs/node2/etc/hostname", "w")
+a_file.truncate(0)
+a_file.write("node2")
+a_file.close()
+
+os.system("systemctl restart tftpd-hpa")
+os.system("systemctl restart nfs-kernel-server")
+os.system("systemctl restart isc-dhcp-server")
+
+
