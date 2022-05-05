@@ -1,13 +1,13 @@
 import os
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("macMaestro")
-parser.add_argument("mac1")
-parser.add_argument("mac2")
-args = parser.parse_args()
-mac1 = args.mac1
-mac2 = args.mac2
-macMaestro = args.macMaestro
+# import argparse
+# parser = argparse.ArgumentParser()
+# parser.add_argument("macMaestro")
+# parser.add_argument("mac1")
+# parser.add_argument("mac2")
+# args = parser.parse_args()
+mac1 = "08:00:27:44:c6:34"
+mac2 = "08:00:27:78:61:49"
+macMaestro = "08:00:27:91:2c:6c"
 mac1Dir = "01-" + mac1.replace(":","-")
 mac2Dir = "01-" + mac2.replace(":","-")
 os.system("apt install -y tftpd-hpa nfs-kernel-server isc-dhcp-server syslinux pxelinux debootstrap")

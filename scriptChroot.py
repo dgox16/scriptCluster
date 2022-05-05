@@ -1,0 +1,10 @@
+import os
+os.system("mount -t proc proc proc")
+os.system("a080027786149pt update -y && apt install -y initramfs-tools linux-image-amd64 ")
+os.system("echo BOOT=nfs >> /etc/initramfs-tools/initramfs.conf")
+os.system("mkinitramfs -d /etc/initramfs-tools/initramfs.conf -o /boot/initrd.pxe")
+os.system("update-initramfs -u")
+os.system("cp -vax /boot/initrd.img-5.10.0-13-amd64 /boot/initrd.pxe")
+os.system("cp -vax /boot/vmlinuz-5.10.0-13-amd64  /boot/vmlinuz.pxe")
+os.system("passwd")
+os.system("exit")
