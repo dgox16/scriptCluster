@@ -5,7 +5,7 @@ import os
 # parser.add_argument("mac1")
 # parser.add_argument("mac2")
 # args = parser.parse_args()
-mac1 = "08:00:27:44:c6:34"
+mac1 = "08:00:27:44:c6:e4"
 mac2 = "08:00:27:78:61:49"
 macMaestro = "08:00:27:91:2c:6c"
 mac1Dir = "01-" + mac1.replace(":","-")
@@ -96,5 +96,5 @@ a_file.close()
 os.system("systemctl restart tftpd-hpa")
 os.system("systemctl restart nfs-kernel-server")
 os.system("systemctl restart isc-dhcp-server")
-
+os.system("reboot")
 
