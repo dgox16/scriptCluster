@@ -1,6 +1,6 @@
 import os
 os.system("mount -t proc proc proc")
-os.system("a080027786149pt update -y && apt install -y initramfs-tools linux-image-amd64 ")
+os.system("apt update -y && apt install -y initramfs-tools linux-image-amd64 ")
 os.system("echo BOOT=nfs >> /etc/initramfs-tools/initramfs.conf")
 os.system("mkinitramfs -d /etc/initramfs-tools/initramfs.conf -o /boot/initrd.pxe")
 os.system("update-initramfs -u")
