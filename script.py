@@ -97,5 +97,3 @@ fileHostname.close()
 os.system("systemctl restart tftpd-hpa")
 os.system("systemctl restart nfs-kernel-server")
 os.system("systemctl restart isc-dhcp-server")
-os.system("reboot")
-
