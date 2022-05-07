@@ -2,8 +2,8 @@
 
 apt install -y tftpd-hpa nfs-kernel-server isc-dhcp-server syslinux pxelinux debootstrap
 
-head -n -3 /etc/networks/interfaces > tempinterfaces && mv tempinterfaces /etc/networks/interfaces
-cat << EOF >> /etc/networks/interfaces
+head -n -3 /etc/network/interfaces > tempinterfaces && mv tempinterfaces /etc/network/interfaces
+cat << EOF >> /etc/network/interfaces
 auto enp0s3
 iface enp0s3 inet dhcp
 
@@ -22,7 +22,7 @@ net.ipv6.conf.default.disable_ipv6 = 1
 EOF
 
 sed '1,$d' /etc/dhcp/dhcpd.conf > tempDHCPConf && mv tempDHCPConf /etc/dhcp/dhcpd.conf
-cat << EOF >> interfaces
+cat << EOF >> /etc/dhcp/dhcpd.conf 
 allow booting;
 allow bootp;
 subnet 10.0.2.0 netmask 255.255.255.0 {
