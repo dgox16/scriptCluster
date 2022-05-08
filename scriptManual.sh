@@ -1,9 +1,22 @@
 #!/bin/bash
-mac1="08:00:27:44:c6:e4"
-mac2="08:00:27:78:61:49"
-macMaestro="08:00:27:91:2c:6c"
-mac1Dir="01-${mac1//:/-}"
-mac2Dir="01-${mac2//:/-}"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+function show_use {
+cat << EOF
+El formato para ejecutar el script de manera correcta es:
+bash script.sh [MACMAESTO] [MAC1] [MAC2]
+Donde las direcciones MAC deben tener el formato de XX:XX:XX:XX:XX:XX
+EOF
+}
+
+if [ $# -ne 3 ]; then
+    show_use
+    exit 1
+fi
+
+macMaestro=$1
+mac1=$2
+mac2=$3
 
 head -n -3 /etc/network/interfaces > temp && mv temp /etc/network/interfaces
 cat << EOF >> /etc/network/interfaces
@@ -19,12 +32,6 @@ iface enp0s8 inet static
 EOF
 
 apt install -y tftpd-hpa nfs-kernel-server openssh-server isc-dhcp-server syslinux pxelinux debootstrap
-
-# cat << EOF >> /etc/sysctl.conf
-
-# net.ipv6.conf.all.disable_ipv6 = 1
-# net.ipv6.conf.default.disable_ipv6 = 1
-# EOF
 
 sed '1,$d' /etc/dhcp/dhcpd.conf > temp && mv temp /etc/dhcp/dhcpd.conf
 cat << EOF >> /etc/dhcp/dhcpd.conf
@@ -95,7 +102,7 @@ EOF
 mount -o bind /dev /srv/nfs/nodeX/dev
 mount -o bind /run /srv/nfs/nodeX/run
 mount -o bind /sys /srv/nfs/nodeX/sys
-cp -a /home/scriptCluster/ /srv/nfs/nodeX/home/
+cp -a $SCRIPT_DIR /srv/nfs/nodeX/home/
 chroot /srv/nfs/nodeX/
 
 cp -vax /srv/nfs/nodeX/boot/*.pxe /srv/tftp
@@ -140,4 +147,4 @@ timeout 3
     append rw initrd=initrd.pxe root=/dev/nfs ip=dhcp nfsroot=10.0.33.14:/srv/nfs/node2/
 EOF
 
-
+reboot
