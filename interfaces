@@ -8,17 +8,17 @@ subnet 10.0.33.0 netmask 255.255.255.0 {
     option routers 10.0.33.1;
     option broadcast-address 10.0.33.255;
 host masternode {
-    hardware ethernet '+ macMaestro +';
+    hardware ethernet 08:00:27:91:2c:6c;
     fixed-address 10.0.33.1;
 }
 
 host node1 {
-    hardware ethernet '+ mac1 +';
+    hardware ethernet 08:00:27:44:c6:e4;
     fixed-address 10.0.33.11;
     filename "/pxelinux.0";
 }
 host node2 {
-    hardware ethernet '+ mac2 +';
+    hardware ethernet 08:00:27:78:61:49;
     fixed-address 10.0.33.12;
     filename "/pxelinux.0";
 }
