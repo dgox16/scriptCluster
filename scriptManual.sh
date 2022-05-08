@@ -13,7 +13,7 @@ iface enp0s3 inet dhcp
 auto enp0s8
 iface enp0s8 inet static
     address 10.0.33.14
-    netmask 255.255.255.15
+    netmask 255.255.255.240
     network 10.0.33.0
     broadcast 10.0.33.15
 EOF
@@ -33,9 +33,9 @@ allow bootp;
 subnet 10.0.2.0 netmask 255.255.255.0 {
 }
 
-subnet 10.0.33.0 netmask 255.255.255.15 {
+subnet 10.0.33.0 netmask 255.255.255.240 {
     range 10.0.33.6 10.0.33.10;
-    option routers 10.0.33.1;
+    option routers 10.0.33.14;
     option broadcast-address 10.0.33.15;
     group {                                    
         filename "pxelinux.0";                 
@@ -66,7 +66,7 @@ sed '1,$d' /etc/default/tftpd-hpa > temp && mv temp /etc/default/tftpd-hpa
 cat << EOF >> /etc/default/tftpd-hpa
 TFTP_USERNAME="tftp"
 TFTP_DIRECTORY="/srv/tftp"
-TFTP_ADDRESS="10.0.33.1:69"
+TFTP_ADDRESS="10.0.33.14:69"
 TFTP_OPTIONS="--secure --create"
 EOF
 systemctl restart tftpd-hpa
@@ -74,7 +74,7 @@ systemctl restart tftpd-hpa
 sed '1,$d' /etc/exports > temp && mv temp /etc/exports
 cat << EOF >> /etc/exports
 /srv/nfs/node1/ 10.0.33.1(rw,async,no_root_squash,no_subtree_check)
-/srv/nfs/node2/ 10.0.33.1(rw,async,no_root_squash,no_subtree_check)
+/srv/nfs/node2/ 10.0.33.2(rw,async,no_root_squash,no_subtree_check)
 EOF
 
 mkdir /srv/nfs/nodeX
@@ -99,11 +99,14 @@ cp -a /home/scriptCluster/ /srv/nfs/nodeX/home/
 chroot /srv/nfs/nodeX/
 
 cp -vax /srv/nfs/nodeX/boot/*.pxe /srv/tftp
+cp -vax /usr/lib/PXELINUX/pxelinux.0 /srv/tftp
+cp -vax /usr/lib/syslinux/modules/bios/ldlinux.c32 /srv/tftp
 tar czvf /srv/nfs/nodeX.tgz -C /srv/nfs/ nodeX --remove-files
 
 cd /srv/nfs
 tar xzvf nodeX.tgz
 mv nodeX node1
+tar xzvf nodeX.tgz
 mv nodeX node2
 
 sed '1,$d' /srv/nfs/node1/etc/hostname > temp && mv temp /srv/nfs/node1/etc/hostname
