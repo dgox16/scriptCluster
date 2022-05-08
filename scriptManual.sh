@@ -4,19 +4,18 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 function show_use {
 cat << EOF
 El formato para ejecutar el script de manera correcta es:
-bash script.sh [MACMAESTO] [MAC1] [MAC2]
+bash script.sh [MAC1] [MAC2]
 Donde las direcciones MAC deben tener el formato de XX:XX:XX:XX:XX:XX
 EOF
 }
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
     show_use
     exit 1
 fi
 
-macMaestro=$1
-mac1=$2
-mac2=$3
+mac1=$1
+mac2=$2
 
 head -n -3 /etc/network/interfaces > temp && mv temp /etc/network/interfaces
 cat << EOF >> /etc/network/interfaces
